@@ -1,0 +1,36 @@
+[tool.poetry]
+name = "deduplication"
+version = "0.1.0"
+description = "A package to identify and cleaning near duplicate files"
+authors = ["JaeHo Bahng, Brian Kwon, Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11"
+matplotlib = "^3.9.2"
+myst-nb = "^1.1.2"
+mmh3 = "^5.0.1"
+bitarray = "^3.0.0"
+nltk = "^3.9.1"
+xxhash = "^3.5.0"
+
+[tool.poetry.dev-dependencies]
+
+[tool.poetry.group.dev.dependencies]
+sphinx-autoapi = "^3.3.2"
+sphinx-rtd-theme = "^3.0.1"
+myst-nb = "^1.1.2"
+pytest = "^8.3.3"
+
+[tool.semantic_release]
+version_toml = [
+    "pyproject.toml:tool.poetry.version",
+]                                                    # version location
+branch = "main"                                      # branch to make releases of
+changelog_file = "CHANGELOG.md"                      # changelog file
+build_command = "pip install poetry && poetry build" # build dists 
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

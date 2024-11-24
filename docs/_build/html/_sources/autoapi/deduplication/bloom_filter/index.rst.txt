@@ -1,0 +1,266 @@
+deduplication.bloom_filter
+==========================
+
+.. py:module:: deduplication.bloom_filter
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   deduplication.bloom_filter.BloomFilter
+   deduplication.bloom_filter.BloomFilter_KM_Opt
+   deduplication.bloom_filter.BloomFilter_Uni_Hash
+   deduplication.bloom_filter.BloomFilter_QF
+
+
+Module Contents
+---------------
+
+.. py:class:: BloomFilter(n: int, f: float)
+
+   .. py:attribute:: n
+
+      Max # of elements
+
+      :type: n (int)
+
+
+   .. py:attribute:: f
+
+      Desired false positive rate
+
+      :type: f (int)
+
+
+   .. py:attribute:: m
+
+      Size of bit array
+
+      :type: m (int)
+
+
+   .. py:attribute:: k
+
+      Number of hash functions
+
+      :type: k (int)
+
+
+   .. py:attribute:: n_bytes
+
+      Number of bytes required to store bit array
+
+      :type: n_bytes (int)
+
+
+   .. py:attribute:: bit_array
+
+      Create the bit array
+
+      :type: bit_array
+
+
+   .. py:method:: add(item: str)
+
+      Adds an item to the bloom filter.
+
+      :param item: the string to add
+
+
+
+   .. py:method:: query(item: str) -> bool
+
+      Checks if an item might be in the bloom filter (may have false positives).
+
+      :param item: the string to query
+
+      :returns: True if item might be in the bloom filter, False if it definitely isn't
+      :rtype: bool
+
+
+
+.. py:class:: BloomFilter_KM_Opt(n: int, f: float)
+
+   .. py:attribute:: n
+
+      Max # of elements
+
+      :type: n (int)
+
+
+   .. py:attribute:: f
+
+      Desired false positive rate
+
+      :type: f (int)
+
+
+   .. py:attribute:: m
+
+      Size of bit array
+
+      :type: m (int)
+
+
+   .. py:attribute:: k
+
+      Number of hash functions
+
+      :type: k (int)
+
+
+   .. py:attribute:: n_bytes
+
+      Number of bytes required to store bit array
+
+      :type: n_bytes (int)
+
+
+   .. py:attribute:: bit_array
+
+      Create the bit array
+
+      :type: bit_array
+
+
+   .. py:method:: add(item: str)
+
+      Adds an item to the Bloom filter using the Kirsch-Mitzenmacher optimization.
+
+      :param item: the string to add
+
+
+
+   .. py:method:: query(item: str) -> bool
+
+      Checks if an item might be in the bloom filter using the Kirsch-Mitzenmacher optimization.
+
+      :param item: the string to query
+
+      :returns: True if item might be in the bloom filter, False if it definitely isn't
+      :rtype: bool
+
+
+
+.. py:class:: BloomFilter_Uni_Hash(n: int, f: float)
+
+   .. py:attribute:: n
+
+      Max # of elements
+
+      :type: n (int)
+
+
+   .. py:attribute:: f
+
+      Desired false positive rate
+
+      :type: f (int)
+
+
+   .. py:attribute:: m
+
+      Size of bit array
+
+      :type: m (int)
+
+
+   .. py:attribute:: k
+
+      Number of hash functions
+
+      :type: k (int)
+
+
+   .. py:attribute:: n_bytes
+
+      Number of bytes required to store bit array
+
+      :type: n_bytes (int)
+
+
+   .. py:attribute:: bit_array
+
+      Create the bit array
+
+      :type: bit_array
+
+
+   .. py:attribute:: seeds
+
+
+   .. py:method:: add(item: str)
+
+      Adds an item to the bloom filter Universal Hashing.
+
+      :param item: the string to add
+
+
+
+   .. py:method:: query(item: str) -> bool
+
+      Checks if an item might be in the bloom filter (may have false positives).
+
+      :param item: the string to query
+
+      :returns: True if item might be in the bloom filter, False if it definitely isn't
+      :rtype: bool
+
+
+
+.. py:class:: BloomFilter_QF(n: int, f: float)
+
+   .. py:attribute:: n
+
+      Max # of elements
+
+      :type: n (int)
+
+
+   .. py:attribute:: f
+
+      Desired false positive rate
+
+      :type: f (int)
+
+
+   .. py:attribute:: m
+
+      Size of bit array
+
+      :type: m (int)
+
+
+   .. py:attribute:: quotient_size
+
+
+   .. py:attribute:: remainder_size
+
+
+   .. py:attribute:: filter
+
+
+   .. py:method:: _hash(item)
+
+
+   .. py:method:: add(item: str)
+
+      Adds an item to the bloom filter.
+
+      :param item: the string to add
+
+
+
+   .. py:method:: query(item: str) -> bool
+
+      Checks if an item might be in the bloom filter (may have false positives).
+
+      :param item: the string to query
+
+      :returns: True if item might be in the bloom filter, False if it definitely isn't
+      :rtype: bool
+
+
+

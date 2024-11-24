@@ -1,0 +1,26 @@
+visualization_lsh
+=================
+
+.. py:module:: visualization_lsh
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   visualization_lsh.plot_s_curves
+
+
+Module Contents
+---------------
+
+.. py:function:: plot_s_curves(fixed_r, fixed_b, s_range)
+
+   Plots S-curves for two configurations: varying b with fixed r and varying r with fixed b.
+
+   :param fixed_r: The fixed r value to plot S-curves while varying b.
+   :param fixed_b: The fixed b value to plot S-curves while varying r.
+   :param s_range: Range of similarity values (0 to 1).
+
+

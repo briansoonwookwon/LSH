@@ -1,0 +1,181 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deduplication.LSHForest &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deduplication.LSHForest</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deduplication.LSHForest</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">deduplication.LSH</span> <span class="kn">import</span> <span class="n">LSH</span>
+<span class="kn">from</span> <span class="nn">utils.utils</span> <span class="kn">import</span> <span class="n">split_dict</span><span class="p">,</span> <span class="n">majority_vote</span>
+
+<div class="viewcode-block" id="LSHForest">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHForest/index.html#deduplication.LSHForest.LSHForest">[docs]</a>
+<span class="k">class</span> <span class="nc">LSHForest</span><span class="p">(</span><span class="n">LSH</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Locality Sensitive Hashing Forest using MinHash and Banding techniques.</span>
+
+<span class="sd">    The LSHForest class extends the LSH class to support the creation of multiple </span>
+<span class="sd">    trees in the forest, allowing for more robust detection of candidate pairs. </span>
+<span class="sd">    Each tree corresponds to an independent LSH index, with results combined via majority voting.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_hashes</span><span class="o">=</span><span class="mi">200</span><span class="p">,</span> <span class="n">num_bands</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">rows_per_band</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">num_trees</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes an LSHForest instance.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            num_hashes (int): Number of hash functions used in MinHashing.</span>
+<span class="sd">            num_bands (int): Number of bands for the banding technique.</span>
+<span class="sd">            rows_per_band (int): Number of rows in each band.</span>
+<span class="sd">            num_trees (int): Number of LSH trees in the forest.</span>
+<span class="sd">            k (int): Parameter for the LSH superclass, indicating the number of nearest neighbors to consider.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">num_hashes</span><span class="p">,</span> <span class="n">num_bands</span><span class="p">,</span> <span class="n">rows_per_band</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_trees</span> <span class="o">=</span> <span class="n">num_trees</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_trees (int): Number of LSH trees in the forest.&quot;&quot;&quot;</span>
+        
+<div class="viewcode-block" id="LSHForest.banding">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHForest/index.html#deduplication.LSHForest.LSHForest.banding">[docs]</a>
+    <span class="k">def</span> <span class="nf">banding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signatures</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Performs the banding technique across multiple LSH trees and identifies candidate pairs.</span>
+
+<span class="sd">        The signatures are split across multiple trees (LSH indices), and candidate pairs </span>
+<span class="sd">        are identified within each tree using the banding technique. The candidate pairs </span>
+<span class="sd">        from all trees are combined using a majority voting mechanism to form the final set </span>
+<span class="sd">        of candidate pairs.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            signatures (dict): A dictionary where keys are document IDs and values are MinHash signatures (lists of hash values).</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set: A set of candidate document pairs (as tuples of document IDs) that share similar bands.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        
+        <span class="c1"># Split the signature dictionary across the specified number of trees.</span>
+        <span class="n">signature_lists</span> <span class="o">=</span> <span class="n">split_dict</span><span class="p">(</span><span class="n">signatures</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_trees</span><span class="p">)</span>
+        <span class="n">candidate_sets</span> <span class="o">=</span> <span class="p">[]</span>
+        
+        <span class="c1"># Iterate over each subset of signatures, treating each as a separate LSH tree.</span>
+        <span class="k">for</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">signature_lists</span><span class="p">:</span>
+            <span class="n">index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+            <span class="n">candidate_pairs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+            
+            <span class="c1"># Process each document&#39;s signature within the current tree.</span>
+            <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="k">for</span> <span class="n">band_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bands</span><span class="p">):</span>
+                    <span class="n">start</span> <span class="o">=</span> <span class="n">band_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span>
+                    <span class="n">band</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span><span class="p">])</span>
+                    <span class="n">index</span><span class="p">[(</span><span class="n">band_idx</span><span class="p">,</span> <span class="n">band</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+
+            <span class="c1"># Identify candidate pairs from documents that share the same band entry.</span>
+            <span class="k">for</span> <span class="n">doc_ids</span> <span class="ow">in</span> <span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                    <span class="n">candidate_pairs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+            
+            <span class="c1"># Add the candidate pairs from the current tree to the list of candidate sets.</span>
+            <span class="n">candidate_sets</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">candidate_pairs</span><span class="p">)</span>
+        
+        <span class="c1"># Use majority voting across all candidate sets from the different trees.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_pairs</span> <span class="o">=</span> <span class="n">majority_vote</span><span class="p">(</span><span class="n">candidate_sets</span><span class="p">)</span>
+        
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_pairs</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

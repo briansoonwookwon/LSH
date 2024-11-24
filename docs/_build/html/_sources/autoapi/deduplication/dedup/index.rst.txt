@@ -1,0 +1,88 @@
+deduplication.dedup
+===================
+
+.. py:module:: deduplication.dedup
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   deduplication.dedup.Baseline
+
+
+Module Contents
+---------------
+
+.. py:class:: Baseline
+
+   .. py:attribute:: hash_set
+
+      A set to store unique MD5 hashes of documents for deduplication.
+      Used to track unique document hashes and identify duplicates in the dataset.
+
+
+   .. py:method:: collection_deduplication(documents_dict)
+
+      Groups documents into clusters based on identical content.
+
+      :param documents_dict: Dictionary where keys are document IDs and values are document strings.
+
+      :returns:
+
+                Dictionary where each key is a cluster ID and the value is a list of document IDs
+                        that are considered duplicates or similar.
+      :rtype: clusters
+
+
+
+   .. py:method:: detect_duplicates(documents)
+
+      This function computes MD5 hashes of each document and identifies duplicates
+      based on matching hash values.
+
+      :param documents: list of document strings to check for duplicates.
+
+      :returns: a set containing unique MD5 hashes of the documents.
+                duplicates: a list of duplicate documents.
+      :rtype: hash_set
+
+
+
+   .. py:method:: length_based_baseline(documents)
+
+      This function considers documents as duplicates if they have the same length.
+      It compares the lengths of documents and identifies duplicates based on that.
+
+      :param documents: list of document strings to check for duplicates.
+
+      :returns: a dictionary that maps document lengths to documents.
+                duplicates: a list of duplicate documents based on length.
+      :rtype: length_map
+
+
+
+   .. py:method:: tokenize(document)
+
+      Tokenizes a document by splitting on spaces and returns a Counter of word frequencies.
+
+      :param document: A string representing a document.
+
+      :returns: A Counter object with word frequencies.
+
+
+
+   .. py:method:: word_count_baseline(documents, threshold=0.8)
+
+      This function uses word count similarity to find duplicates. If two documents have
+      a word overlap greater than the threshold, they are considered duplicates.
+
+      :param documents: A list of document strings.
+      :param threshold: The fraction of word overlap required to consider two documents as duplicates.
+
+      :returns: A list of tuples where each tuple contains two documents that are considered duplicates.
+      :rtype: duplicates
+
+
+

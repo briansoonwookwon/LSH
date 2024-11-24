@@ -1,0 +1,53 @@
+deduplication.LSHForest
+=======================
+
+.. py:module:: deduplication.LSHForest
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   deduplication.LSHForest.LSHForest
+
+
+Module Contents
+---------------
+
+.. py:class:: LSHForest(num_hashes=200, num_bands=10, rows_per_band=4, num_trees=5, k=5)
+
+   Bases: :py:obj:`deduplication.LSH.LSH`
+
+
+   Locality Sensitive Hashing Forest using MinHash and Banding techniques.
+
+   The LSHForest class extends the LSH class to support the creation of multiple
+   trees in the forest, allowing for more robust detection of candidate pairs.
+   Each tree corresponds to an independent LSH index, with results combined via majority voting.
+
+
+   .. py:attribute:: num_trees
+
+      Number of LSH trees in the forest.
+
+      :type: num_trees (int)
+
+
+   .. py:method:: banding(signatures)
+
+      Performs the banding technique across multiple LSH trees and identifies candidate pairs.
+
+      The signatures are split across multiple trees (LSH indices), and candidate pairs
+      are identified within each tree using the banding technique. The candidate pairs
+      from all trees are combined using a majority voting mechanism to form the final set
+      of candidate pairs.
+
+      :param signatures: A dictionary where keys are document IDs and values are MinHash signatures (lists of hash values).
+      :type signatures: dict
+
+      :returns: A set of candidate document pairs (as tuples of document IDs) that share similar bands.
+      :rtype: set
+
+
+

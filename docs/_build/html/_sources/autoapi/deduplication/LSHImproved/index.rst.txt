@@ -1,0 +1,216 @@
+deduplication.LSHImproved
+=========================
+
+.. py:module:: deduplication.LSHImproved
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   deduplication.LSHImproved.LSHImproved
+
+
+Module Contents
+---------------
+
+.. py:class:: LSHImproved(num_hashes=100, num_bands=20, rows_per_band=5, k=5, num_probes=4, banding_method='nearby_banding')
+
+   Multi-Probe Locality Sensitive Hashing with MinHash and Banding.
+
+   LSH Improved uses a multi-probe approach to traditional locality-sensitive
+   hashing to reduce the number of required hash tables, ultimately saving space
+   and improving efficiency. This class supports various banding methods for probing
+   nearby bands, allowing customizable deduplication and similarity search.
+
+
+   .. py:attribute:: num_hashes
+
+      Total number of hash functions used for MinHash signature computation.
+
+      :type: num_hashes (int)
+
+
+   .. py:attribute:: num_bands
+
+      Number of bands used for LSH banding.
+
+      :type: num_bands (int)
+
+
+   .. py:attribute:: rows_per_band
+
+      Number of rows in each band (bands * rows_per_band must equal num_hashes).
+
+      :type: rows_per_band (int)
+
+
+   .. py:attribute:: index
+
+      A dictionary used to store bands and document IDs for candidate identification.
+
+      :type: index (defaultdict)
+
+
+   .. py:attribute:: unique_docs
+
+      A dictionary of unique documents (after removing exact duplicates).
+
+      :type: unique_docs (dict)
+
+
+   .. py:attribute:: cleaned_docs
+
+      A dictionary of cleaned documents after pre-processing.
+
+      :type: cleaned_docs (dict)
+
+
+   .. py:attribute:: candidate_pairs
+
+      A set of candidate document pairs found using LSH.
+
+      :type: candidate_pairs (set)
+
+
+   .. py:attribute:: exact_duplicates
+
+      A dictionary of exact duplicates, mapping original doc IDs to duplicate doc IDs.
+
+      :type: exact_duplicates (dict)
+
+
+   .. py:attribute:: banding_method
+
+      The banding method to use for hash perturbation.
+      Options are 'nearby_banding', 'bit_flip', and 'gaussian'.
+
+      :type: banding_method
+
+
+   .. py:attribute:: k
+
+      The shingle size (number of words or characters in each shingle).
+
+      :type: k (int)
+
+
+   .. py:method:: remove_duplicates(docs)
+
+      Removes exact duplicates from the provided documents and stores the unique ones.
+
+      This method scans through the provided documents, identifying and removing exact duplicates.
+      It stores the first occurrence of each document in the `unique_docs` attribute and tracks duplicates
+      in the `exact_duplicates` attribute.
+
+      :param docs: A dictionary where keys are document IDs and values are document contents.
+      :type docs: dict
+
+      Side Effects:
+          - Populates the `unique_docs` dictionary with unique documents.
+          - Populates the `exact_duplicates` dictionary with mappings from original document IDs to their duplicates.
+
+
+
+   .. py:method:: compute_minhash_signatures(docs)
+
+      Computes MinHash signatures for each unique document using parallel processing.
+
+      This method performs the following steps:
+      1. Removes exact duplicates from the documents using `remove_duplicates`.
+      2. Cleans each document (e.g., tokenization, removing punctuation).
+      3. Generates shingles for each document based on the specified shingle size (`k`).
+      4. Computes MinHash signatures for each document using the `minhash` function.
+
+      :param docs: A dictionary where keys are document IDs and values are document contents.
+      :type docs: dict
+
+      :returns: A dictionary where keys are document IDs and values are the MinHash signatures (lists of hash values).
+      :rtype: dict
+
+      Side Effects:
+          - Populates the `cleaned_docs` dictionary with cleaned versions of the documents.
+          - Populates the `shingle_sets` dictionary with shingles for each document.
+          - Populates the `signatures` dictionary with MinHash signatures for each document.
+
+
+
+   .. py:method:: nearby_banding(band, num_probes)
+
+      This method creates multiple variations of the input band by applying
+      perturbations to its elements via modulus calculations.
+
+      :param band: A tuple representing the original hash band, where each
+                   element corresponds to a hash value.
+      :type band: tuple
+      :param num_probes: The number of perturbations (nearby bands) to generate.
+      :type num_probes: int
+
+      :returns:
+
+                A list of tuples, each representing a perturbed version of the
+                    original band. The number of tuples returned is equal to
+                    `num_probes`.
+      :rtype: list
+
+
+
+   .. py:method:: bit_flip(band, num_probes)
+
+      This method creates multiple variations of the input band by applying
+      perturbations to its elements via randomized bit flips within the hash token.
+
+      :param band: A tuple representing the original hash band, where each
+                   element corresponds to a hash value.
+      :type band: tuple
+      :param num_probes: The number of perturbations (nearby bands) to generate.
+      :type num_probes: int
+
+      :returns:
+
+                A list of tuples, each representing a perturbed version of the
+                    original band. The number of tuples returned is equal to
+                    `num_probes`.
+      :rtype: list
+
+
+
+   .. py:method:: gaussian(band, num_probes, std_dev=1.0)
+
+      This method creates multiple variations of the input band by applying
+      perturbations to its elements via gaussian noise.
+
+      :param band: A tuple representing the original hash band, where each
+                   element corresponds to a hash value.
+      :type band: tuple
+      :param num_probes: The number of perturbations (nearby bands) to generate.
+      :type num_probes: int
+
+      :returns:
+
+                A list of tuples, each representing a perturbed version of the
+                    original band. The number of tuples returned is equal to
+                    `num_probes`.
+      :rtype: list
+
+
+
+   .. py:method:: banding(signatures)
+
+      This method organizes the MinHash signatures into bands and applies a perturbation
+      strategy to generate nearby bands for each document. It populates an index of candidate
+      pairs of documents that are likely to be similar based on their perturbed bands.
+
+      The banding method used is determined by the `self.banding_method` attribute, which
+      can be one of the following: 'nearby_banding', 'bit_flip', or 'gaussian'.
+
+      :param signatures: A dictionary where keys are document IDs and values are MinHash signatures (lists or tuples of hash values) for each document.
+      :type signatures: dict
+
+      :returns: A set of tuples, where each tuple contains two document IDs that are identified
+                as candidate pairs based on their bands and perturbations.
+      :rtype: set
+
+
+

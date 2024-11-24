@@ -1,0 +1,359 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deduplication.LSHImproved &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">deduplication.LSHImproved</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for deduplication.LSHImproved</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">re</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span>
+<span class="kn">from</span> <span class="nn">itertools</span> <span class="kn">import</span> <span class="n">combinations</span>
+<span class="kn">from</span> <span class="nn">utils.utils</span> <span class="kn">import</span> <span class="n">clean_document</span><span class="p">,</span> <span class="n">shingle</span><span class="p">,</span> <span class="n">minhash</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">joblib</span> <span class="kn">import</span> <span class="n">Parallel</span><span class="p">,</span> <span class="n">delayed</span>
+
+<div class="viewcode-block" id="LSHImproved">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved">[docs]</a>
+<span class="k">class</span> <span class="nc">LSHImproved</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Multi-Probe Locality Sensitive Hashing with MinHash and Banding.</span>
+
+<span class="sd">    LSH Improved uses a multi-probe approach to traditional locality-sensitive</span>
+<span class="sd">    hashing to reduce the number of required hash tables, ultimately saving space </span>
+<span class="sd">    and improving efficiency. This class supports various banding methods for probing</span>
+<span class="sd">    nearby bands, allowing customizable deduplication and similarity search.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">num_hashes</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">num_bands</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">rows_per_band</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="n">num_probes</span> <span class="o">=</span> <span class="mi">4</span><span class="p">,</span> <span class="n">banding_method</span><span class="o">=</span><span class="s1">&#39;nearby_banding&#39;</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the LSHImproved instance with the specified number of hash functions, bands, and shingle size, number of probes, and banding strategy.</span>
+
+<span class="sd">        Raises </span>
+<span class="sd">            AssertionError: If the number of hash functions does not equal `num_bands * rows_per_band`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_hashes</span> <span class="o">=</span> <span class="n">num_hashes</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_hashes (int): Total number of hash functions used for MinHash signature computation.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">num_bands</span> <span class="o">=</span> <span class="n">num_bands</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;num_bands (int): Number of bands used for LSH banding.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span> <span class="o">=</span> <span class="n">rows_per_band</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;rows_per_band (int): Number of rows in each band (bands * rows_per_band must equal num_hashes).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">index</span> <span class="o">=</span> <span class="n">defaultdict</span><span class="p">(</span><span class="nb">list</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;index (defaultdict): A dictionary used to store bands and document IDs for candidate identification.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">unique_docs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;unique_docs (dict): A dictionary of unique documents (after removing exact duplicates).&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_docs</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;cleaned_docs (dict): A dictionary of cleaned documents after pre-processing.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">candidate_pairs</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;candidate_pairs (set): A set of candidate document pairs found using LSH.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exact_duplicates</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;exact_duplicates (dict): A dictionary of exact duplicates, mapping original doc IDs to duplicate doc IDs.&quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">banding_method</span> <span class="o">=</span> <span class="n">banding_method</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;banding_method: The banding method to use for hash perturbation.</span>
+<span class="sd">            Options are &#39;nearby_banding&#39;, &#39;bit_flip&#39;, and &#39;gaussian&#39;.&quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">k</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;k (int): The shingle size (number of words or characters in each shingle).&quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hashes</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_bands</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span><span class="p">,</span> <span class="s2">&quot;Hash functions must equal bands * rows_per_band&quot;</span>
+    
+    <span class="c1"># Keeping remove duplicates the same</span>
+<div class="viewcode-block" id="LSHImproved.remove_duplicates">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.remove_duplicates">[docs]</a>
+    <span class="k">def</span> <span class="nf">remove_duplicates</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Removes exact duplicates from the provided documents and stores the unique ones.</span>
+<span class="sd">        </span>
+<span class="sd">        This method scans through the provided documents, identifying and removing exact duplicates.</span>
+<span class="sd">        It stores the first occurrence of each document in the `unique_docs` attribute and tracks duplicates</span>
+<span class="sd">        in the `exact_duplicates` attribute.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            docs (dict): A dictionary where keys are document IDs and values are document contents.</span>
+<span class="sd">        </span>
+<span class="sd">        Side Effects:</span>
+<span class="sd">            - Populates the `unique_docs` dictionary with unique documents.</span>
+<span class="sd">            - Populates the `exact_duplicates` dictionary with mappings from original document IDs to their duplicates.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">seen_docs</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">docs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">doc</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">seen_docs</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">unique_docs</span><span class="p">[</span><span class="n">doc_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc</span>
+                <span class="n">seen_docs</span><span class="p">[</span><span class="n">doc</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc_id</span>  <span class="c1"># Track first occurrence of the document</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="c1"># Track exact duplicates</span>
+                <span class="n">original_id</span> <span class="o">=</span> <span class="n">seen_docs</span><span class="p">[</span><span class="n">doc</span><span class="p">]</span>
+                <span class="k">if</span> <span class="n">original_id</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">exact_duplicates</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">exact_duplicates</span><span class="p">[</span><span class="n">original_id</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">exact_duplicates</span><span class="p">[</span><span class="n">original_id</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="LSHImproved.compute_minhash_signatures">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.compute_minhash_signatures">[docs]</a>
+    <span class="k">def</span> <span class="nf">compute_minhash_signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">docs</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Computes MinHash signatures for each unique document using parallel processing.</span>
+<span class="sd">        </span>
+<span class="sd">        This method performs the following steps:</span>
+<span class="sd">        1. Removes exact duplicates from the documents using `remove_duplicates`.</span>
+<span class="sd">        2. Cleans each document (e.g., tokenization, removing punctuation).</span>
+<span class="sd">        3. Generates shingles for each document based on the specified shingle size (`k`).</span>
+<span class="sd">        4. Computes MinHash signatures for each document using the `minhash` function.</span>
+<span class="sd">        </span>
+<span class="sd">        Args:</span>
+<span class="sd">            docs (dict): A dictionary where keys are document IDs and values are document contents.</span>
+<span class="sd">        </span>
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary where keys are document IDs and values are the MinHash signatures (lists of hash values).</span>
+<span class="sd">        </span>
+<span class="sd">        Side Effects:</span>
+<span class="sd">            - Populates the `cleaned_docs` dictionary with cleaned versions of the documents.</span>
+<span class="sd">            - Populates the `shingle_sets` dictionary with shingles for each document.</span>
+<span class="sd">            - Populates the `signatures` dictionary with MinHash signatures for each document.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">remove_duplicates</span><span class="p">(</span><span class="n">docs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_docs</span> <span class="o">=</span> <span class="p">{</span><span class="n">doc_id</span><span class="p">:</span> <span class="n">clean_document</span><span class="p">(</span><span class="n">doc</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">unique_docs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shingle_sets</span> <span class="o">=</span> <span class="p">{</span><span class="n">doc_id</span><span class="p">:</span> <span class="n">shingle</span><span class="p">(</span><span class="n">doc</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">doc</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">cleaned_docs</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+        
+        <span class="c1"># Parallel computation of MinHash signatures</span>
+        <span class="n">signatures</span> <span class="o">=</span> <span class="n">Parallel</span><span class="p">(</span><span class="n">n_jobs</span><span class="o">=-</span><span class="mi">1</span><span class="p">)(</span> <span class="n">delayed</span><span class="p">(</span><span class="n">minhash</span><span class="p">)(</span><span class="n">shingles</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_hashes</span><span class="p">)</span> <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">shingles</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">shingle_sets</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shingle_sets</span><span class="o">.</span><span class="n">keys</span><span class="p">(),</span> <span class="n">signatures</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span></div>
+
+    
+    
+    <span class="c1"># Creating nearby_banding</span>
+<div class="viewcode-block" id="LSHImproved.nearby_banding">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.nearby_banding">[docs]</a>
+    <span class="k">def</span> <span class="nf">nearby_banding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">num_probes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates multiple variations of the input band by applying </span>
+<span class="sd">        perturbations to its elements via modulus calculations. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            band (tuple): A tuple representing the original hash band, where each </span>
+<span class="sd">                        element corresponds to a hash value.</span>
+<span class="sd">            num_probes (int): The number of perturbations (nearby bands) to generate. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of tuples, each representing a perturbed version of the </span>
+<span class="sd">                original band. The number of tuples returned is equal to </span>
+<span class="sd">                `num_probes`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+    
+        <span class="c1"># We identify &quot;nearby&quot; neighbors by making perturbations in the hash key</span>
+        <span class="n">perturbed_bands</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_probes</span><span class="p">):</span>
+            <span class="n">changed_band</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+
+            <span class="c1">#picking random band to change</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">changed_band</span><span class="p">))</span>
+            <span class="n">changed_band</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">changed_band</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span> <span class="o">%</span> <span class="mi">100</span> 
+            <span class="c1"># ^^ used modules perturbation in this case, but there other options we can change</span>
+
+            <span class="c1">#appending to list </span>
+            <span class="n">perturbed_bands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">changed_band</span><span class="p">))</span>
+        
+        <span class="k">return</span> <span class="n">perturbed_bands</span></div>
+
+
+<div class="viewcode-block" id="LSHImproved.bit_flip">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.bit_flip">[docs]</a>
+    <span class="k">def</span> <span class="nf">bit_flip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">num_probes</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates multiple variations of the input band by applying </span>
+<span class="sd">        perturbations to its elements via randomized bit flips within the hash token. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            band (tuple): A tuple representing the original hash band, where each </span>
+<span class="sd">                        element corresponds to a hash value.</span>
+<span class="sd">            num_probes (int): The number of perturbations (nearby bands) to generate. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of tuples, each representing a perturbed version of the </span>
+<span class="sd">                original band. The number of tuples returned is equal to </span>
+<span class="sd">                `num_probes`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">perturbed_bands</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1">#flipping the bits in the hash </span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_probes</span><span class="p">):</span>
+            <span class="n">p_band</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_band</span><span class="p">))</span> 
+            <span class="n">p_band</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">^=</span> <span class="mi">1</span>  <span class="c1"># Flip a bit at the random index</span>
+            <span class="n">perturbed_bands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p_band</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">perturbed_bands</span></div>
+
+    
+<div class="viewcode-block" id="LSHImproved.gaussian">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.gaussian">[docs]</a>
+    <span class="k">def</span> <span class="nf">gaussian</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">band</span><span class="p">,</span> <span class="n">num_probes</span><span class="p">,</span> <span class="n">std_dev</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method creates multiple variations of the input band by applying </span>
+<span class="sd">        perturbations to its elements via gaussian noise. </span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            band (tuple): A tuple representing the original hash band, where each </span>
+<span class="sd">                        element corresponds to a hash value.</span>
+<span class="sd">            num_probes (int): The number of perturbations (nearby bands) to generate. </span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of tuples, each representing a perturbed version of the </span>
+<span class="sd">                original band. The number of tuples returned is equal to </span>
+<span class="sd">                `num_probes`.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">perturbed_bands</span> <span class="o">=</span> <span class="p">[]</span>
+
+        <span class="c1">#adding gaussian &quot;noise&quot; so that hash is slightly altered</span>
+        <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_probes</span><span class="p">):</span>
+            <span class="n">p_band</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">band</span><span class="p">)</span>
+            <span class="n">i</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">p_band</span><span class="p">))</span>
+            <span class="n">noise</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">normal</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">std_dev</span><span class="p">)</span>  <span class="c1"># adding Gaussian noise</span>
+            <span class="n">p_band</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">+=</span> <span class="n">noise</span>
+            <span class="n">perturbed_bands</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="n">p_band</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">perturbed_bands</span></div>
+
+
+    <span class="c1">#Changing the banding method so it checks neighboring bands</span>
+<div class="viewcode-block" id="LSHImproved.banding">
+<a class="viewcode-back" href="../../autoapi/deduplication/LSHImproved/index.html#deduplication.LSHImproved.LSHImproved.banding">[docs]</a>
+    <span class="k">def</span> <span class="nf">banding</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signatures</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method organizes the MinHash signatures into bands and applies a perturbation </span>
+<span class="sd">        strategy to generate nearby bands for each document. It populates an index of candidate </span>
+<span class="sd">        pairs of documents that are likely to be similar based on their perturbed bands.</span>
+
+<span class="sd">        The banding method used is determined by the `self.banding_method` attribute, which </span>
+<span class="sd">        can be one of the following: &#39;nearby_banding&#39;, &#39;bit_flip&#39;, or &#39;gaussian&#39;.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            signatures (dict): A dictionary where keys are document IDs and values are MinHash signatures (lists or tuples of hash values) for each document.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set: A set of tuples, where each tuple contains two document IDs that are identified </span>
+<span class="sd">            as candidate pairs based on their bands and perturbations.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">banding_method</span> <span class="o">==</span> <span class="s1">&#39;nearby_banding&#39;</span><span class="p">:</span>
+            <span class="n">perturb_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">nearby_banding</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">banding_method</span> <span class="o">==</span> <span class="s1">&#39;bit_flip&#39;</span><span class="p">:</span>
+            <span class="n">perturb_fn</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bit_flip</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">banding_method</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+            <span class="n">perturb_fn</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">band</span><span class="p">,</span> <span class="n">num_probes</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">gaussian</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="n">num_probes</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unknown banding method: </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">banding_method</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Process signatures and apply perturbations</span>
+        <span class="k">for</span> <span class="n">doc_id</span><span class="p">,</span> <span class="n">sig</span> <span class="ow">in</span> <span class="n">signatures</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">band_idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">num_bands</span><span class="p">):</span>
+                <span class="n">start</span> <span class="o">=</span> <span class="n">band_idx</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span>
+                <span class="n">band</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">sig</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">start</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">rows_per_band</span><span class="p">])</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">band_idx</span><span class="p">,</span> <span class="n">band</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+
+                <span class="n">neighboring_bands</span> <span class="o">=</span> <span class="n">perturb_fn</span><span class="p">(</span><span class="n">band</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_probes</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">neighbor</span> <span class="ow">in</span> <span class="n">neighboring_bands</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="p">[(</span><span class="n">band_idx</span><span class="p">,</span> <span class="n">neighbor</span><span class="p">)]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">doc_id</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">doc_ids</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">candidate_pairs</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">combinations</span><span class="p">(</span><span class="n">doc_ids</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">candidate_pairs</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

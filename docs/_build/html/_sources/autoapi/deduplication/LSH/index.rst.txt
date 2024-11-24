@@ -1,0 +1,153 @@
+deduplication.LSH
+=================
+
+.. py:module:: deduplication.LSH
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   deduplication.LSH.LSH
+
+
+Module Contents
+---------------
+
+.. py:class:: LSH(num_hashes=100, num_bands=20, rows_per_band=5, k=5)
+
+   Locality Sensitive Hashing (LSH) using MinHash and Banding for approximate near-duplicate detection.
+
+   This class implements the LSH technique to efficiently find near-duplicate documents by hashing
+   similar documents into the same buckets through MinHashing and banding techniques. It consists of
+   the following key steps:
+
+   - MinHash signatures computation: Shingle the documents and compute their MinHash signatures.
+   - Banding: Split the MinHash signatures into bands and hash the bands to identify candidate pairs.
+   - Duplicate detection: Detect exact duplicates and track them.
+
+
+   .. py:attribute:: num_hashes
+
+      Total number of hash functions used for MinHash signature computation.
+
+      :type: num_hashes (int)
+
+
+   .. py:attribute:: num_bands
+
+      Number of bands used for LSH banding.
+
+      :type: num_bands (int)
+
+
+   .. py:attribute:: rows_per_band
+
+      Number of rows in each band (bands * rows_per_band must equal num_hashes).
+
+      :type: rows_per_band (int)
+
+
+   .. py:attribute:: index
+
+      A dictionary used to store bands and document IDs for candidate identification.
+
+      :type: index (defaultdict)
+
+
+   .. py:attribute:: unique_docs
+
+      A dictionary of unique documents (after removing exact duplicates).
+
+      :type: unique_docs (dict)
+
+
+   .. py:attribute:: cleaned_docs
+
+      A dictionary of cleaned documents after pre-processing.
+
+      :type: cleaned_docs (dict)
+
+
+   .. py:attribute:: candidate_pairs
+
+      A set of candidate document pairs found using LSH.
+
+      :type: candidate_pairs (set)
+
+
+   .. py:attribute:: exact_duplicates
+
+      A dictionary of exact duplicates, mapping original doc IDs to duplicate doc IDs.
+
+      :type: exact_duplicates (dict)
+
+
+   .. py:attribute:: k
+
+      The shingle size (number of words or characters in each shingle).
+
+      :type: k (int)
+
+
+   .. py:method:: remove_duplicates(docs)
+
+      Removes exact duplicates from the provided documents and stores the unique ones.
+
+      This method scans through the provided documents, identifying and removing exact duplicates.
+      It stores the first occurrence of each document in the `unique_docs` attribute and tracks duplicates
+      in the `exact_duplicates` attribute.
+
+      :param docs: A dictionary where keys are document IDs and values are document contents.
+      :type docs: dict
+
+      Side Effects:
+          - Populates the `unique_docs` dictionary with unique documents.
+          - Populates the `exact_duplicates` dictionary with mappings from original document IDs to their duplicates.
+
+
+
+   .. py:method:: compute_minhash_signatures(docs)
+
+      Computes MinHash signatures for each unique document using parallel processing.
+
+      This method performs the following steps:
+      1. Removes exact duplicates from the documents using `remove_duplicates`.
+      2. Cleans each document (e.g., tokenization, removing punctuation).
+      3. Generates shingles for each document based on the specified shingle size (`k`).
+      4. Computes MinHash signatures for each document using the `minhash` function.
+
+      :param docs: A dictionary where keys are document IDs and values are document contents.
+      :type docs: dict
+
+      :returns: A dictionary where keys are document IDs and values are the MinHash signatures (lists of hash values).
+      :rtype: dict
+
+      Side Effects:
+          - Populates the `cleaned_docs` dictionary with cleaned versions of the documents.
+          - Populates the `shingle_sets` dictionary with shingles for each document.
+          - Populates the `signatures` dictionary with MinHash signatures for each document.
+
+
+
+   .. py:method:: banding(signatures)
+
+      Applies the LSH banding technique to find candidate pairs based on MinHash signatures.
+
+      This method divides the MinHash signatures into bands. Each band is hashed, and if multiple
+      documents share the same band hash, they are considered candidate pairs for potential similarity.
+      The candidate pairs are stored in the `candidate_pairs` attribute.
+
+      :param signatures: A dictionary where keys are document IDs and values are MinHash signatures (lists of hash values).
+      :type signatures: dict
+
+      :returns: A set of candidate document pairs (as tuples of document IDs) that share similar bands.
+      :rtype: set
+
+      Side Effects:
+          - Populates the `index` attribute with bands as keys and document IDs as values (bucketed by band).
+          - Populates the `candidate_pairs` attribute with pairs of document IDs that share at least one band.
+
+
+

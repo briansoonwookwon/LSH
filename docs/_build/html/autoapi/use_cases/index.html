@@ -1,0 +1,216 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>use_cases &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="deduplication" href="../deduplication/index.html" />
+    <link rel="prev" title="utils" href="../utils/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../utils/index.html">utils</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">use_cases</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#use_cases.collection_deduplication"><code class="docutils literal notranslate"><span class="pre">collection_deduplication()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#use_cases.nearest_neighbor_search"><code class="docutils literal notranslate"><span class="pre">nearest_neighbor_search()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../deduplication/index.html">deduplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualizations/index.html">visualizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualization_lsh/index.html">visualization_lsh</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">use_cases</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/autoapi/use_cases/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-use_cases">
+<span id="use-cases"></span><h1>use_cases<a class="headerlink" href="#module-use_cases" title="Link to this heading"></a></h1>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#use_cases.collection_deduplication" title="use_cases.collection_deduplication"><code class="xref py py-obj docutils literal notranslate"><span class="pre">collection_deduplication</span></code></a>(lsh)</p></td>
+<td><p>Clusters documents using LSH results and Union-Find, removing duplicates.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#use_cases.nearest_neighbor_search" title="use_cases.nearest_neighbor_search"><code class="xref py py-obj docutils literal notranslate"><span class="pre">nearest_neighbor_search</span></code></a>(query_doc, lsh)</p></td>
+<td><p>Finds approximate nearest neighbors for a given query document using LSH.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="use_cases.collection_deduplication">
+<span class="sig-prename descclassname"><span class="pre">use_cases.</span></span><span class="sig-name descname"><span class="pre">collection_deduplication</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">lsh</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#use_cases.collection_deduplication" title="Link to this definition"></a></dt>
+<dd><p>Clusters documents using LSH results and Union-Find, removing duplicates.</p>
+<p>This function clusters documents into groups of near-duplicates based on the candidate pairs
+found using Locality Sensitive Hashing (LSH) and the Union-Find data structure. It further
+incorporates exact duplicates into the clusters.</p>
+<p>The process works as follows:
+1. It initializes a Union-Find structure to manage clustering.
+2. For each pair of candidate documents (found via LSH banding), it unites them in the Union-Find.
+3. The documents are grouped by their root in Union-Find to form clusters of similar documents.
+4. Exact duplicates (if any) are added to the clusters containing their original document.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>lsh</strong> (<a class="reference internal" href="../deduplication/LSH/index.html#deduplication.LSH.LSH" title="deduplication.LSH.LSH"><em>LSH</em></a>) – An instance of the LSH class containing precomputed MinHash signatures,
+candidate pairs, and exact duplicate information.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A dictionary where the keys are root document IDs and values are lists of document IDs</dt><dd><p>representing clusters of similar documents (including exact duplicates).</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clusters</span> <span class="o">=</span> <span class="n">collection_deduplication</span><span class="p">(</span><span class="n">lsh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">for</span> <span class="n">root</span><span class="p">,</span> <span class="n">docs</span> <span class="ow">in</span> <span class="n">clusters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+<span class="go">    &gt;&gt;&gt; print(f&quot;Cluster with root document {root}: {docs}&quot;)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="use_cases.nearest_neighbor_search">
+<span class="sig-prename descclassname"><span class="pre">use_cases.</span></span><span class="sig-name descname"><span class="pre">nearest_neighbor_search</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">query_doc</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lsh</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#use_cases.nearest_neighbor_search" title="Link to this definition"></a></dt>
+<dd><p>Finds approximate nearest neighbors for a given query document using LSH.</p>
+<p>This function performs an approximate nearest neighbor search for the input query document.
+It uses the following steps:</p>
+<ol class="arabic simple">
+<li><p>Cleans the query document by removing stop words, punctuation, and normalizing the text.</p></li>
+<li><p>Computes shingles from the cleaned document using the shingle size <cite>lsh.k</cite>.</p></li>
+<li><p>Calculates the MinHash signature of the query document based on the specified number of hash functions.</p></li>
+<li><p>Finds candidate nearest neighbors by comparing the query document’s MinHash signature against
+the existing signatures in the LSH index. The candidate pairs are documents that share at least
+one band with the query document.</p></li>
+</ol>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>query_doc</strong> (<em>str</em>) – The text of the query document for which to find approximate nearest neighbors.</p></li>
+<li><p><strong>lsh</strong> (<a class="reference internal" href="../deduplication/LSH/index.html#deduplication.LSH.LSH" title="deduplication.LSH.LSH"><em>LSH</em></a>) – An instance of the LSH class containing the precomputed MinHash signatures
+and the banding index for efficient nearest neighbor search.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A set of document IDs representing the candidate nearest neighbors for the query document.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">query_document</span> <span class="o">=</span> <span class="s2">&quot;This is a sample document text for searching.&quot;</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">candidate_neighbors</span> <span class="o">=</span> <span class="n">nearest_neighbor_search</span><span class="p">(</span><span class="n">query_document</span><span class="p">,</span> <span class="n">lsh</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Candidate Nearest Neighbors:&quot;</span><span class="p">,</span> <span class="n">candidate_neighbors</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../utils/index.html" class="btn btn-neutral float-left" title="utils" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../deduplication/index.html" class="btn btn-neutral float-right" title="deduplication" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

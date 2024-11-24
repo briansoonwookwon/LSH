@@ -1,0 +1,71 @@
+deduplication.__main__
+======================
+
+.. py:module:: deduplication.__main__
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   deduplication.__main__.parser
+
+
+Module Contents
+---------------
+
+.. py:data:: parser
+
+   Parses command-line arguments for creating a corpus.
+
+   This script defines various command-line arguments for processing
+   input files, defining parameters, and choosing methods for the
+   assignment's corpus creation.
+
+   :param -d: Required. Directory path of the input file.
+   :type -d: str
+   :param --indir: Required. Directory path of the input file.
+   :type --indir: str
+   :param -t: Required. Type of use case.
+   :type -t: str
+   :param --case: Required. Type of use case.
+   :type --case: str
+   :param -s: Optional. Whether to output results to a text file ('y' or 'n').
+   :type -s: str
+   :param --save: Optional. Whether to output results to a text file ('y' or 'n').
+   :type --save: str
+   :param -e: Optional. Document to query.
+   :type -e: str
+   :param --example: Optional. Document to query.
+   :type --example: str
+   :param -n: Optional. Number of hash functions to use.
+   :type -n: int
+   :param --numhash: Optional. Number of hash functions to use.
+   :type --numhash: int
+   :param -b: Optional. Number of bands.
+   :type -b: int
+   :param --numband: Optional. Number of bands.
+   :type --numband: int
+   :param -r: Optional. Number of rows per band.
+   :type -r: int
+   :param --row: Optional. Number of rows per band.
+   :type --row: int
+   :param -k: Optional. Length of shingles.
+   :type -k: int
+   :param --shinlen: Optional. Length of shingles.
+   :type --shinlen: int
+   :param -c: Optional. Size of the tree.
+   :type -c: int
+   :param --treesize: Optional. Size of the tree.
+   :type --treesize: int
+   :param -m: Optional. Default is 'LSH'. Specifies the method to use.
+              Options: 'baseline', 'LSH', 'LSH_mp', 'LSH_forest'.
+   :type -m: str
+   :param --method: Optional. Default is 'LSH'. Specifies the method to use.
+                    Options: 'baseline', 'LSH', 'LSH_mp', 'LSH_forest'.
+   :type --method: str
+
+   :returns: An object containing the parsed arguments.
+   :rtype: Namespace
+

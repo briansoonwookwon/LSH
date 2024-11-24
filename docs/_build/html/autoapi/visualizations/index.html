@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>visualizations &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="visualization_lsh" href="../visualization_lsh/index.html" />
+    <link rel="prev" title="deduplication.dedup" href="../deduplication/dedup/index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../utils/index.html">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../use_cases/index.html">use_cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deduplication/index.html">deduplication</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">visualizations</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#visualizations.BloomFilter"><code class="docutils literal notranslate"><span class="pre">BloomFilter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualizations.calculate_false_positive_rate"><code class="docutils literal notranslate"><span class="pre">calculate_false_positive_rate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#visualizations.plot_false_positive_rate_vs_hash_functions"><code class="docutils literal notranslate"><span class="pre">plot_false_positive_rate_vs_hash_functions()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../visualization_lsh/index.html">visualization_lsh</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">visualizations</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/autoapi/visualizations/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-visualizations">
+<span id="visualizations"></span><h1>visualizations<a class="headerlink" href="#module-visualizations" title="Link to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#visualizations.BloomFilter" title="visualizations.BloomFilter"><code class="xref py py-obj docutils literal notranslate"><span class="pre">BloomFilter</span></code></a></p></td>
+<td><p></p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#visualizations.calculate_false_positive_rate" title="visualizations.calculate_false_positive_rate"><code class="xref py py-obj docutils literal notranslate"><span class="pre">calculate_false_positive_rate</span></code></a>(n, f, k)</p></td>
+<td><p>Calculates the false positive rate for a Bloom Filter given n, f, and k.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#visualizations.plot_false_positive_rate_vs_hash_functions" title="visualizations.plot_false_positive_rate_vs_hash_functions"><code class="xref py py-obj docutils literal notranslate"><span class="pre">plot_false_positive_rate_vs_hash_functions</span></code></a>(n, f, max_k)</p></td>
+<td><p>Plots the false positive rate vs. the number of hash functions.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="visualizations.BloomFilter">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">visualizations.</span></span><span class="sig-name descname"><span class="pre">BloomFilter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visualizations.BloomFilter" title="Link to this definition"></a></dt>
+<dd><dl class="py attribute">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.n">
+<span class="sig-name descname"><span class="pre">n</span></span><a class="headerlink" href="#visualizations.BloomFilter.n" title="Link to this definition"></a></dt>
+<dd><p>Maximum number of elements the filter is designed to hold.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.f">
+<span class="sig-name descname"><span class="pre">f</span></span><a class="headerlink" href="#visualizations.BloomFilter.f" title="Link to this definition"></a></dt>
+<dd><p>Desired false positive rate for the filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.m">
+<span class="sig-name descname"><span class="pre">m</span></span><a class="headerlink" href="#visualizations.BloomFilter.m" title="Link to this definition"></a></dt>
+<dd><p>Size of the bit array, calculated based on <cite>f</cite> and <cite>n</cite> to meet the desired false positive rate.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.k">
+<span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#visualizations.BloomFilter.k" title="Link to this definition"></a></dt>
+<dd><p>Number of hash functions used in the filter. If not provided, it is calculated.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.bit_array">
+<span class="sig-name descname"><span class="pre">bit_array</span></span><a class="headerlink" href="#visualizations.BloomFilter.bit_array" title="Link to this definition"></a></dt>
+<dd><p>Bit array used to store hashed indices, with a size of <cite>m</cite>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bitarray</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visualizations.BloomFilter.add" title="Link to this definition"></a></dt>
+<dd><p>Adds an item to the bloom filter.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> – the string to add</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="visualizations.BloomFilter.query">
+<span class="sig-name descname"><span class="pre">query</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#visualizations.BloomFilter.query" title="Link to this definition"></a></dt>
+<dd><p>Checks if an item might be in the bloom filter (may have false positives).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> – the string to query</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if item might be in the bloom filter, False if it definitely isn’t</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visualizations.calculate_false_positive_rate">
+<span class="sig-prename descclassname"><span class="pre">visualizations.</span></span><span class="sig-name descname"><span class="pre">calculate_false_positive_rate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visualizations.calculate_false_positive_rate" title="Link to this definition"></a></dt>
+<dd><p>Calculates the false positive rate for a Bloom Filter given n, f, and k.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – number of elements</p></li>
+<li><p><strong>f</strong> – desired false positive rate</p></li>
+<li><p><strong>k</strong> – number of hash functions</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The observed false positive rate.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="visualizations.plot_false_positive_rate_vs_hash_functions">
+<span class="sig-prename descclassname"><span class="pre">visualizations.</span></span><span class="sig-name descname"><span class="pre">plot_false_positive_rate_vs_hash_functions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_k</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#visualizations.plot_false_positive_rate_vs_hash_functions" title="Link to this definition"></a></dt>
+<dd><p>Plots the false positive rate vs. the number of hash functions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>n</strong> – number of elements</p></li>
+<li><p><strong>f</strong> – desired false positive rate</p></li>
+<li><p><strong>max_k</strong> – maximum number of hash functions to test</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../deduplication/dedup/index.html" class="btn btn-neutral float-left" title="deduplication.dedup" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../visualization_lsh/index.html" class="btn btn-neutral float-right" title="visualization_lsh" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overview of Deduplication &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Example usage" href="example.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="#" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul>
+<li class="toctree-l1"><a class="reference internal" href="example.html">Example usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="autoapi/index.html">API Reference</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="#">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="#" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">Overview of Deduplication</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/index.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="overview-of-deduplication">
+<h1>Overview of Deduplication<a class="headerlink" href="#overview-of-deduplication" title="Link to this heading"></a></h1>
+<p>A package to identify and cleaning near duplicate files</p>
+<section id="features">
+<h2>Features<a class="headerlink" href="#features" title="Link to this heading"></a></h2>
+<section id="base-lsh">
+<h3>Base LSH<a class="headerlink" href="#base-lsh" title="Link to this heading"></a></h3>
+<section id="key-variables">
+<h4>Key Variables<a class="headerlink" href="#key-variables" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">num_hashes</span></code></strong>: Number of hash functions, determining the MinHash signature length and similarity accuracy.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">num_bands</span></code></strong>: Number of bands to divide the signature, affecting sensitivity and selectivity.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">rows_per_band</span></code></strong>: Rows in each band; impacts selectivity and must satisfy <code class="docutils literal notranslate"><span class="pre">num_bands</span> <span class="pre">*</span> <span class="pre">rows_per_band</span> <span class="pre">=</span> <span class="pre">num_hashes</span></code>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">k</span></code></strong>: Shingle size (number of words per shingle) that sets the granularity of document segmentation.</p></li>
+</ul>
+</section>
+<section id="algorithm-steps">
+<h4>Algorithm Steps<a class="headerlink" href="#algorithm-steps" title="Link to this heading"></a></h4>
+<ol class="arabic simple">
+<li><p><strong>Remove unique documents</strong>: Store in separate dictionary</p></li>
+<li><p><strong>Shingling</strong>: Break each document into overlapping word sequences (k-shingles) to capture local structure.</p></li>
+<li><p><strong>MinHash Signatures</strong>: Apply multiple hash functions to each document’s shingles, keeping only the minimum hash per function to create a signature matrix where columns are documents and rows are hash functions.</p></li>
+<li><p><strong>Banding</strong>: Split each signature into band(groups of rows) ➔ Within each band, the sequence of hash values is grouped and treated as a single entity ➔ If two documents have the same band hash they are considered to be in the same “bucket” for that band.</p></li>
+<li><p><strong>Candidate Pairs</strong>: Identify documents in the same bucket as candidate pairs.</p></li>
+<li><p><strong>Clustering</strong>: Form clusters of near-duplicate documents based on shared buckets, representing high similarity.</p></li>
+</ol>
+</section>
+</section>
+<section id="lsh-forest">
+<h3>LSH Forest<a class="headerlink" href="#lsh-forest" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LSH</span> <span class="pre">Forest</span></code> class under <code class="docutils literal notranslate"><span class="pre">src/deduplication</span></code> extends the base LSH class by creating multiple trees in the forest. Each tree corresponds to an independent LSH producing independent candidate pairs. The final candidate pairs are merged via majority voting. This allows more robustness and less false positive rate by favoring candidate pairs that appear consistently.</p>
+<section id="id1">
+<h4>Key Variables<a class="headerlink" href="#id1" title="Link to this heading"></a></h4>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">num_trees</span></code></strong>: Number of trees, creating number of LSH trees</p></li>
+</ul>
+</section>
+</section>
+<section id="lsh-multi-probe-approach">
+<h3>LSH Multi Probe Approach<a class="headerlink" href="#lsh-multi-probe-approach" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">LSHImproved</span></code> class under <code class="docutils literal notranslate"><span class="pre">src/deduplication</span></code> uses a multi-probe locality sensitive hashing algorithm for efficient near-duplicate detection and similarity search for large document collections. While the traditional LSH implementation, which we discussed earlier, creates fixed buckets for the hash tokens, the multi-probe approach perturbates the hash tokens in order to find “nearby” buckets for each document. This allows for an easier way to find similar documents while reducing the overall storage needed in this algorithm.</p>
+<p>Specifically, we utilized MinHash signatures to represent each document and tested which perturbation methods (<code class="docutils literal notranslate"><span class="pre">bit_flip</span></code>, <code class="docutils literal notranslate"><span class="pre">nearby_banding</span></code>, and <code class="docutils literal notranslate"><span class="pre">gaussian</span></code>) along with an ideal probe number provided the optimal number of clusters and was most efficient time-wise. Thus, this improved version of LSH allows us to identify candidate pairs that share one or more similar bands with more efficiency than the traditional method.</p>
+<section id="id2">
+<h4>Key Variables<a class="headerlink" href="#id2" title="Link to this heading"></a></h4>
+<p><code class="docutils literal notranslate"><span class="pre">num_probes</span></code>: the number of probes needed for multi-probe search
+<code class="docutils literal notranslate"><span class="pre">banding_method</span></code>: this indicates the hashing perturbation method  (bit_flip, nearby_banding, and gaussian)</p>
+</section>
+</section>
+<section id="bloom-filter">
+<h3>Bloom Filter<a class="headerlink" href="#bloom-filter" title="Link to this heading"></a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">BloomFilter</span></code> class under <code class="docutils literal notranslate"><span class="pre">src/deduplication</span></code> is an implementation of a probabilistic data structure used for efficient membership testing, designed to determine whether an element might be in a set or is definitely not in it. This implementation uses a configurable number of hash functions and a bit array to track elements, allowing for a specified false positive rate.</p>
+<p>The class accepts two main parameters: <code class="docutils literal notranslate"><span class="pre">n</span></code>, the maximum expected number of elements, and <code class="docutils literal notranslate"><span class="pre">f</span></code>, the desired false positive rate. When an item is added, the <code class="docutils literal notranslate"><span class="pre">add</span></code> method tokenizes the item and generates n-grams (substrings of length 1 to 3), then hashes these n-grams across multiple hash functions, setting the respective bits in the bit array. The <code class="docutils literal notranslate"><span class="pre">query</span></code> method performs a similar hashing process to check if all related bits are set, indicating that the item might be present. This Bloom filter is highly space-efficient and well-suited for applications where some false positives are acceptable, but false negatives are not.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">BloomFilter_QF</span></code> class combines a Bloom filter with a quotient filter for enhanced space efficiency. It splits each hash into a <strong>quotient</strong> (bucket index) and <strong>remainder</strong> (stored in the bucket). This structure allows efficient membership testing and lower false positives by using the remainder to confirm matches within each bucket.</p>
+</section>
+</section>
+<section id="requirements">
+<h2>Requirements<a class="headerlink" href="#requirements" title="Link to this heading"></a></h2>
+<p><strong>These will be the technical requirements to run the code</strong></p>
+<ul class="simple">
+<li><p>python = “^3.11”</p></li>
+<li><p>matplotlib = “^3.9.2”</p></li>
+<li><p>myst-nb = “^1.1.2”</p></li>
+<li><p>mmh3 = “^5.0.1”</p></li>
+<li><p>bitarray = “^3.0.0”</p></li>
+<li><p>nltk = “^3.9.1”</p></li>
+<li><p>xxhash = “^3.5.0”</p></li>
+</ul>
+</section>
+<section id="installation">
+<h2>Installation<a class="headerlink" href="#installation" title="Link to this heading"></a></h2>
+<p><strong>We describe the bash comments to run each file</strong></p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>deduplication
+</pre></div>
+</div>
+</section>
+<section id="usage">
+<h2>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h2>
+<p>Explore <a class="reference internal" href="#./docs/example.ipynb"><span class="xref myst">Usage Explanation Notebook</span></a> for a more detailed explanation of the package</p>
+<section id="how-to-run-package-in-script-or-notebook">
+<h3>How to run package in script or notebook<a class="headerlink" href="#how-to-run-package-in-script-or-notebook" title="Link to this heading"></a></h3>
+<section id="running-base-lsh">
+<h4>Running base LSH<a class="headerlink" href="#running-base-lsh" title="Link to this heading"></a></h4>
+</section>
+</section>
+<section id="how-to-run-package-from-a-terminal">
+<h3>How to run package from a terminal<a class="headerlink" href="#how-to-run-package-from-a-terminal" title="Link to this heading"></a></h3>
+<p>Arguments:</p>
+<ul class="simple">
+<li><p>-d, –indir (str): Required. Directory path of the input file.</p></li>
+<li><p>-t, –case (str): Required. Type of use case.</p></li>
+<li><p>-s, –save (str): Optional. Whether to output results to a text file (‘y’ or ‘n’).</p></li>
+<li><p>-e, –example (str): Optional. Document to query.</p></li>
+<li><p>-n, –numhash (int): Optional. Number of hash functions to use.</p></li>
+<li><p>-b, –numband (int): Optional. Number of bands.</p></li>
+<li><p>-r, –row (int): Optional. Number of rows per band.</p></li>
+<li><p>-k, –shinlen (int): Optional. Length of shingles.</p></li>
+<li><p>-c, –treesize (int): Optional. Size of the tree.</p></li>
+<li><p>-m, –method (str): Optional. Default is ‘LSH’. Specifies the method to use. Options: ‘baseline’, ‘LSH’, ‘LSH_mp’, ‘LSH_forest’.</p></li>
+</ul>
+<p>Example Terminal Code:</p>
+<ul class="simple">
+<li><p>python -m deduplication -d ‘./data/onek.tsv’ -t ‘deduplication’ -s ‘y’</p></li>
+<li><p>python -m deduplication -d ‘./data/threehundred.tsv’ -t ‘deduplication’</p></li>
+<li><p>python -m deduplication -d ‘./data/threehundred.tsv’ -t ‘deduplication’ -m ‘baseline’</p></li>
+<li><p>python -m deduplication -d ‘./data/hundred.tsv’ -t ‘ann’ -e ‘this is a blank statement’</p></li>
+<li><p>python -m deduplication -d ‘./data/onek.tsv’ -t ‘deduplication’ -m “LSH_forest”</p></li>
+<li><p>python -m deduplication -d ‘./data/onek.tsv’ -t ‘deduplication’ -m “LSH_forest” -n 200 -b 10 -r 5 -c 4</p></li>
+</ul>
+</section>
+</section>
+<section id="contributing">
+<h2>Contributing<a class="headerlink" href="#contributing" title="Link to this heading"></a></h2>
+<p>Clone and set up the repository with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>TODO<span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="nb">cd</span><span class="w"> </span>deduplication
+pip<span class="w"> </span>install<span class="w"> </span>-e<span class="w"> </span><span class="s2">&quot;.[dev]&quot;</span>
+</pre></div>
+</div>
+<p>Install pre-commit hooks with</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pre-commit<span class="w"> </span>install
+</pre></div>
+</div>
+<p>Run tests using</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pytest</span> <span class="o">-</span><span class="n">v</span> <span class="n">tests</span>
+</pre></div>
+</div>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="example.html" class="btn btn-neutral float-right" title="Example usage" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

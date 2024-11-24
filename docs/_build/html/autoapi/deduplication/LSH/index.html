@@ -1,0 +1,337 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>deduplication.LSH &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" />
+    <link rel="next" title="deduplication.LSHForest" href="../LSHForest/index.html" />
+    <link rel="prev" title="deduplication" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../../example.html">Example usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="../../utils/index.html">utils</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../use_cases/index.html">use_cases</a></li>
+<li class="toctree-l2 current"><a class="reference internal" href="../index.html">deduplication</a><ul class="current">
+<li class="toctree-l3 current"><a class="reference internal" href="../index.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l4 current"><a class="current reference internal" href="#">deduplication.LSH</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../LSHForest/index.html">deduplication.LSHForest</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../LSHImproved/index.html">deduplication.LSHImproved</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../__main__/index.html">deduplication.__main__</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../bloom_filter/index.html">deduplication.bloom_filter</a></li>
+<li class="toctree-l4"><a class="reference internal" href="../dedup/index.html">deduplication.dedup</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#attributes">Attributes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../index.html#package-contents">Package Contents</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualizations/index.html">visualizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../visualization_lsh/index.html">visualization_lsh</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">API Reference</a></li>
+          <li class="breadcrumb-item"><a href="../index.html">deduplication</a></li>
+      <li class="breadcrumb-item active">deduplication.LSH</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../../_sources/autoapi/deduplication/LSH/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-deduplication.LSH">
+<span id="deduplication-lsh"></span><h1>deduplication.LSH<a class="headerlink" href="#module-deduplication.LSH" title="Link to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#deduplication.LSH.LSH" title="deduplication.LSH.LSH"><code class="xref py py-obj docutils literal notranslate"><span class="pre">LSH</span></code></a></p></td>
+<td><p>Locality Sensitive Hashing (LSH) using MinHash and Banding for approximate near-duplicate detection.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">deduplication.LSH.</span></span><span class="sig-name descname"><span class="pre">LSH</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_hashes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_bands</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">20</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rows_per_band</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/deduplication/LSH.html#LSH"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deduplication.LSH.LSH" title="Link to this definition"></a></dt>
+<dd><p>Locality Sensitive Hashing (LSH) using MinHash and Banding for approximate near-duplicate detection.</p>
+<p>This class implements the LSH technique to efficiently find near-duplicate documents by hashing
+similar documents into the same buckets through MinHashing and banding techniques. It consists of
+the following key steps:</p>
+<ul class="simple">
+<li><p>MinHash signatures computation: Shingle the documents and compute their MinHash signatures.</p></li>
+<li><p>Banding: Split the MinHash signatures into bands and hash the bands to identify candidate pairs.</p></li>
+<li><p>Duplicate detection: Detect exact duplicates and track them.</p></li>
+</ul>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.num_hashes">
+<span class="sig-name descname"><span class="pre">num_hashes</span></span><a class="headerlink" href="#deduplication.LSH.LSH.num_hashes" title="Link to this definition"></a></dt>
+<dd><p>Total number of hash functions used for MinHash signature computation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>num_hashes (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.num_bands">
+<span class="sig-name descname"><span class="pre">num_bands</span></span><a class="headerlink" href="#deduplication.LSH.LSH.num_bands" title="Link to this definition"></a></dt>
+<dd><p>Number of bands used for LSH banding.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>num_bands (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.rows_per_band">
+<span class="sig-name descname"><span class="pre">rows_per_band</span></span><a class="headerlink" href="#deduplication.LSH.LSH.rows_per_band" title="Link to this definition"></a></dt>
+<dd><p>Number of rows in each band (bands * rows_per_band must equal num_hashes).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>rows_per_band (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.index">
+<span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#deduplication.LSH.LSH.index" title="Link to this definition"></a></dt>
+<dd><p>A dictionary used to store bands and document IDs for candidate identification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>index (defaultdict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.unique_docs">
+<span class="sig-name descname"><span class="pre">unique_docs</span></span><a class="headerlink" href="#deduplication.LSH.LSH.unique_docs" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of unique documents (after removing exact duplicates).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>unique_docs (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.cleaned_docs">
+<span class="sig-name descname"><span class="pre">cleaned_docs</span></span><a class="headerlink" href="#deduplication.LSH.LSH.cleaned_docs" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of cleaned documents after pre-processing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>cleaned_docs (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.candidate_pairs">
+<span class="sig-name descname"><span class="pre">candidate_pairs</span></span><a class="headerlink" href="#deduplication.LSH.LSH.candidate_pairs" title="Link to this definition"></a></dt>
+<dd><p>A set of candidate document pairs found using LSH.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>candidate_pairs (set)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.exact_duplicates">
+<span class="sig-name descname"><span class="pre">exact_duplicates</span></span><a class="headerlink" href="#deduplication.LSH.LSH.exact_duplicates" title="Link to this definition"></a></dt>
+<dd><p>A dictionary of exact duplicates, mapping original doc IDs to duplicate doc IDs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>exact_duplicates (dict)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.k">
+<span class="sig-name descname"><span class="pre">k</span></span><a class="headerlink" href="#deduplication.LSH.LSH.k" title="Link to this definition"></a></dt>
+<dd><p>The shingle size (number of words or characters in each shingle).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>k (int)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.remove_duplicates">
+<span class="sig-name descname"><span class="pre">remove_duplicates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/deduplication/LSH.html#LSH.remove_duplicates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deduplication.LSH.LSH.remove_duplicates" title="Link to this definition"></a></dt>
+<dd><p>Removes exact duplicates from the provided documents and stores the unique ones.</p>
+<p>This method scans through the provided documents, identifying and removing exact duplicates.
+It stores the first occurrence of each document in the <cite>unique_docs</cite> attribute and tracks duplicates
+in the <cite>exact_duplicates</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>docs</strong> (<em>dict</em>) – A dictionary where keys are document IDs and values are document contents.</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Side Effects:</dt><dd><ul class="simple">
+<li><p>Populates the <cite>unique_docs</cite> dictionary with unique documents.</p></li>
+<li><p>Populates the <cite>exact_duplicates</cite> dictionary with mappings from original document IDs to their duplicates.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.compute_minhash_signatures">
+<span class="sig-name descname"><span class="pre">compute_minhash_signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">docs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/deduplication/LSH.html#LSH.compute_minhash_signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deduplication.LSH.LSH.compute_minhash_signatures" title="Link to this definition"></a></dt>
+<dd><p>Computes MinHash signatures for each unique document using parallel processing.</p>
+<p>This method performs the following steps:
+1. Removes exact duplicates from the documents using <cite>remove_duplicates</cite>.
+2. Cleans each document (e.g., tokenization, removing punctuation).
+3. Generates shingles for each document based on the specified shingle size (<cite>k</cite>).
+4. Computes MinHash signatures for each document using the <cite>minhash</cite> function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>docs</strong> (<em>dict</em>) – A dictionary where keys are document IDs and values are document contents.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are document IDs and values are the MinHash signatures (lists of hash values).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Side Effects:</dt><dd><ul class="simple">
+<li><p>Populates the <cite>cleaned_docs</cite> dictionary with cleaned versions of the documents.</p></li>
+<li><p>Populates the <cite>shingle_sets</cite> dictionary with shingles for each document.</p></li>
+<li><p>Populates the <cite>signatures</cite> dictionary with MinHash signatures for each document.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="deduplication.LSH.LSH.banding">
+<span class="sig-name descname"><span class="pre">banding</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signatures</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../../_modules/deduplication/LSH.html#LSH.banding"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#deduplication.LSH.LSH.banding" title="Link to this definition"></a></dt>
+<dd><p>Applies the LSH banding technique to find candidate pairs based on MinHash signatures.</p>
+<p>This method divides the MinHash signatures into bands. Each band is hashed, and if multiple
+documents share the same band hash, they are considered candidate pairs for potential similarity.
+The candidate pairs are stored in the <cite>candidate_pairs</cite> attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>signatures</strong> (<em>dict</em>) – A dictionary where keys are document IDs and values are MinHash signatures (lists of hash values).</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A set of candidate document pairs (as tuples of document IDs) that share similar bands.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+<dl class="simple">
+<dt>Side Effects:</dt><dd><ul class="simple">
+<li><p>Populates the <cite>index</cite> attribute with bands as keys and document IDs as values (bucketed by band).</p></li>
+<li><p>Populates the <cite>candidate_pairs</cite> attribute with pairs of document IDs that share at least one band.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="deduplication" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../LSHForest/index.html" class="btn btn-neutral float-right" title="deduplication.LSHForest" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

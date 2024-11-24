@@ -1,0 +1,211 @@
+utils
+=====
+
+.. py:module:: utils
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   utils.UnionFind
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   utils.clean_document
+   utils.shingle
+   utils.minhash
+   utils.read_tsv
+   utils.split_dict
+   utils.majority_vote
+
+
+Module Contents
+---------------
+
+.. py:function:: clean_document(text)
+
+   Clean and normalize the document by lowercasing and removing special characters.
+
+   This function processes the input text by converting it to lowercase and removing any non-alphabetical
+   characters (such as numbers, punctuation, or special symbols), leaving only lowercase alphabetic characters
+   and spaces. It helps normalize the text for further processing like shingling or hashing.
+
+   :param text: The input document text to be cleaned.
+   :type text: str
+
+   :returns: A cleaned version of the input text, containing only lowercase letters and spaces.
+   :rtype: str
+
+   .. rubric:: Example
+
+   >>> clean_document("Hello, World!123")
+   'hello world'
+
+
+.. py:function:: shingle(text, k=5)
+
+   Generate k-shingles (or k-grams) from a given text.
+
+   A shingle is a contiguous sequence of k words. This function splits the cleaned text into words and
+   generates all possible k-shingles from those words. Shingling helps capture local word context for use
+   in similarity detection and MinHashing.
+
+   :param text: The input document text that has been pre-processed.
+   :type text: str
+   :param k: The number of words in each shingle. Default is 5.
+   :type k: int
+
+   :returns: A set of k-shingles, where each shingle is a string of k words joined by spaces.
+   :rtype: set
+
+   .. rubric:: Example
+
+   >>> shingle("this is an example of a document", k=3)
+   {'this is an', 'is an example', 'an example of', 'example of a', 'of a document'}
+
+
+.. py:function:: minhash(shingles, num_hashes=100)
+
+   Generate a MinHash signature for the given set of shingles.
+
+   MinHash is used to estimate the Jaccard similarity between two sets efficiently. This function computes
+   a MinHash signature for a given set of shingles by generating `num_hashes` hash functions and returning
+   the minimum hash value for each function.
+
+   :param shingles: A set of k-shingles (strings) representing the document.
+   :type shingles: set
+   :param num_hashes: The number of hash functions to use in generating the MinHash signature. Default is 100.
+   :type num_hashes: int
+
+   :returns:
+
+             A MinHash signature represented as a list of `num_hashes` integers, where each entry is the minimum
+                   hash value for that hash function over the shingles.
+   :rtype: list
+
+   .. rubric:: Example
+
+   >>> shingles = {"this is an example", "example of a document", "a document example"}
+   >>> minhash(shingles, num_hashes=3)
+   [210933193411394158751014314048262142248, 7042737232409725043981610333941128952, 113933543564394106622393219348875832082]
+
+
+.. py:class:: UnionFind
+
+   Union-Find (Disjoint Set) data structure with path compression for efficient merging and finding.
+
+   Union-Find (also known as Disjoint Set) is a data structure that efficiently handles merging of sets
+   and finding the root or representative element of a set. It uses path compression to flatten the tree structure,
+   improving the efficiency of future find operations.
+
+   .. attribute:: parent
+
+      A dictionary mapping each element to its parent element. If an element is its own parent,
+      it is the root of its set.
+
+      :type: dict
+
+   .. method:: find(x)
+
+      Finds the root of the set containing element `x`, with path compression to improve efficiency.
+
+   .. method:: union(x, y)
+
+      Merges the sets containing elements `x` and `y`.
+      
+
+
+   .. py:attribute:: parent
+
+      Initializes an empty Union-Find structure.
+
+
+   .. py:method:: find(x)
+
+      Find the root of the set containing element `x` with path compression.
+
+      Path compression is used to make future queries faster by setting each element's parent directly to the root.
+      If the element `x` is not yet in the Union-Find structure, it is initialized as its own root.
+
+      :param x: The element whose set root is being queried.
+
+      :returns: The root element of the set containing `x`.
+
+      .. rubric:: Example
+
+      >>> uf = UnionFind()
+      >>> uf.union(1, 2)
+      >>> uf.find(1)
+      2
+
+
+
+   .. py:method:: union(x, y)
+
+      Union the sets containing elements `x` and `y`.
+
+      This method merges the sets that contain elements `x` and `y`. If the elements are already in the same set,
+      no change is made. Otherwise, one set's root is updated to point to the other set's root.
+
+      :param x: The first element to union.
+      :param y: The second element to union.
+
+      .. rubric:: Example
+
+      >>> uf = UnionFind()
+      >>> uf.union(1, 2)
+      >>> uf.union(2, 3)
+      >>> uf.find(3)
+      2
+
+
+
+.. py:function:: read_tsv(tsv)
+
+   Read a TSV (tab-separated values) file and return a dictionary of its contents.
+
+   This function reads a TSV file where each line consists of an index and a text value separated by a tab.
+   The index is used as the key, and the text as the value in the returned dictionary.
+
+   :param tsv: The file path to the TSV file.
+   :type tsv: str
+
+   :returns: A dictionary where keys are the integer indices from the TSV file, and values are the text content.
+   :rtype: dict
+
+   .. rubric:: Example
+
+   >>> read_tsv('documents.tsv')
+   {1: 'This is the first document.', 2: 'Another document with different content.'}
+
+
+.. py:function:: split_dict(input_dict, num_splits)
+
+   Splits a dictionary into a specified number of smaller dictionaries.
+
+   :param input_dict: The input dictionary to be split.
+   :type input_dict: dict
+   :param num_splits: The number of splits.
+   :type num_splits: int
+
+   :returns: A list of dictionaries with split entries.
+   :rtype: list
+
+
+.. py:function:: majority_vote(candidate_sets)
+
+   This function performs a majority vote on a list of sets of candidate pairs.
+
+   :param candidate_sets: List of sets containing candidate pairs.
+   :type candidate_sets: list of sets
+
+   :returns: The pairs that appear in the majority of sets.
+   :rtype: list
+
+

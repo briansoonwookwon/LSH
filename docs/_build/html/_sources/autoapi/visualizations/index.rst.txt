@@ -1,0 +1,102 @@
+visualizations
+==============
+
+.. py:module:: visualizations
+
+
+Classes
+-------
+
+.. autoapisummary::
+
+   visualizations.BloomFilter
+
+
+Functions
+---------
+
+.. autoapisummary::
+
+   visualizations.calculate_false_positive_rate
+   visualizations.plot_false_positive_rate_vs_hash_functions
+
+
+Module Contents
+---------------
+
+.. py:class:: BloomFilter(n: int, f: float, k: int = None)
+
+   .. py:attribute:: n
+
+      Maximum number of elements the filter is designed to hold.
+
+      :type: int
+
+
+   .. py:attribute:: f
+
+      Desired false positive rate for the filter.
+
+      :type: float
+
+
+   .. py:attribute:: m
+
+      Size of the bit array, calculated based on `f` and `n` to meet the desired false positive rate.
+
+      :type: int
+
+
+   .. py:attribute:: k
+
+      Number of hash functions used in the filter. If not provided, it is calculated.
+
+      :type: int
+
+
+   .. py:attribute:: bit_array
+
+      Bit array used to store hashed indices, with a size of `m`.
+
+      :type: bitarray
+
+
+   .. py:method:: add(item: str)
+
+      Adds an item to the bloom filter.
+
+      :param item: the string to add
+
+
+
+   .. py:method:: query(item: str) -> bool
+
+      Checks if an item might be in the bloom filter (may have false positives).
+
+      :param item: the string to query
+
+      :returns: True if item might be in the bloom filter, False if it definitely isn't
+      :rtype: bool
+
+
+
+.. py:function:: calculate_false_positive_rate(n, f, k)
+
+   Calculates the false positive rate for a Bloom Filter given n, f, and k.
+
+   :param n: number of elements
+   :param f: desired false positive rate
+   :param k: number of hash functions
+
+   :returns: The observed false positive rate.
+
+
+.. py:function:: plot_false_positive_rate_vs_hash_functions(n, f, max_k)
+
+   Plots the false positive rate vs. the number of hash functions.
+
+   :param n: number of elements
+   :param f: desired false positive rate
+   :param max_k: maximum number of hash functions to test
+
+

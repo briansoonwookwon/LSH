@@ -1,0 +1,404 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>utils &mdash; deduplication  documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+      <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css?v=be8a1c11" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="use_cases" href="../use_cases/index.html" />
+    <link rel="prev" title="API Reference" href="../index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            deduplication
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../../example.html">Example usage</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="../index.html">API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">utils</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#classes">Classes</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#functions">Functions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#module-contents">Module Contents</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#utils.clean_document"><code class="docutils literal notranslate"><span class="pre">clean_document()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.shingle"><code class="docutils literal notranslate"><span class="pre">shingle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.minhash"><code class="docutils literal notranslate"><span class="pre">minhash()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.UnionFind"><code class="docutils literal notranslate"><span class="pre">UnionFind</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.read_tsv"><code class="docutils literal notranslate"><span class="pre">read_tsv()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.split_dict"><code class="docutils literal notranslate"><span class="pre">split_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#utils.majority_vote"><code class="docutils literal notranslate"><span class="pre">majority_vote()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../use_cases/index.html">use_cases</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../deduplication/index.html">deduplication</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualizations/index.html">visualizations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../visualization_lsh/index.html">visualization_lsh</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">deduplication</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">API Reference</a></li>
+      <li class="breadcrumb-item active">utils</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/autoapi/utils/index.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-utils">
+<span id="utils"></span><h1>utils<a class="headerlink" href="#module-utils" title="Link to this heading"></a></h1>
+<section id="classes">
+<h2>Classes<a class="headerlink" href="#classes" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#utils.UnionFind" title="utils.UnionFind"><code class="xref py py-obj docutils literal notranslate"><span class="pre">UnionFind</span></code></a></p></td>
+<td><p>Union-Find (Disjoint Set) data structure with path compression for efficient merging and finding.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="functions">
+<h2>Functions<a class="headerlink" href="#functions" title="Link to this heading"></a></h2>
+<table class="autosummary longtable docutils align-default">
+<tbody>
+<tr class="row-odd"><td><p><a class="reference internal" href="#utils.clean_document" title="utils.clean_document"><code class="xref py py-obj docutils literal notranslate"><span class="pre">clean_document</span></code></a>(text)</p></td>
+<td><p>Clean and normalize the document by lowercasing and removing special characters.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#utils.shingle" title="utils.shingle"><code class="xref py py-obj docutils literal notranslate"><span class="pre">shingle</span></code></a>(text[, k])</p></td>
+<td><p>Generate k-shingles (or k-grams) from a given text.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#utils.minhash" title="utils.minhash"><code class="xref py py-obj docutils literal notranslate"><span class="pre">minhash</span></code></a>(shingles[, num_hashes])</p></td>
+<td><p>Generate a MinHash signature for the given set of shingles.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#utils.read_tsv" title="utils.read_tsv"><code class="xref py py-obj docutils literal notranslate"><span class="pre">read_tsv</span></code></a>(tsv)</p></td>
+<td><p>Read a TSV (tab-separated values) file and return a dictionary of its contents.</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="#utils.split_dict" title="utils.split_dict"><code class="xref py py-obj docutils literal notranslate"><span class="pre">split_dict</span></code></a>(input_dict, num_splits)</p></td>
+<td><p>Splits a dictionary into a specified number of smaller dictionaries.</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference internal" href="#utils.majority_vote" title="utils.majority_vote"><code class="xref py py-obj docutils literal notranslate"><span class="pre">majority_vote</span></code></a>(candidate_sets)</p></td>
+<td><p>This function performs a majority vote on a list of sets of candidate pairs.</p></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="module-contents">
+<h2>Module Contents<a class="headerlink" href="#module-contents" title="Link to this heading"></a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.clean_document">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">clean_document</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.clean_document" title="Link to this definition"></a></dt>
+<dd><p>Clean and normalize the document by lowercasing and removing special characters.</p>
+<p>This function processes the input text by converting it to lowercase and removing any non-alphabetical
+characters (such as numbers, punctuation, or special symbols), leaving only lowercase alphabetic characters
+and spaces. It helps normalize the text for further processing like shingling or hashing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>text</strong> (<em>str</em>) – The input document text to be cleaned.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A cleaned version of the input text, containing only lowercase letters and spaces.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>str</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">clean_document</span><span class="p">(</span><span class="s2">&quot;Hello, World!123&quot;</span><span class="p">)</span>
+<span class="go">&#39;hello world&#39;</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.shingle">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">shingle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">k</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.shingle" title="Link to this definition"></a></dt>
+<dd><p>Generate k-shingles (or k-grams) from a given text.</p>
+<p>A shingle is a contiguous sequence of k words. This function splits the cleaned text into words and
+generates all possible k-shingles from those words. Shingling helps capture local word context for use
+in similarity detection and MinHashing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The input document text that has been pre-processed.</p></li>
+<li><p><strong>k</strong> (<em>int</em>) – The number of words in each shingle. Default is 5.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A set of k-shingles, where each shingle is a string of k words joined by spaces.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>set</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shingle</span><span class="p">(</span><span class="s2">&quot;this is an example of a document&quot;</span><span class="p">,</span> <span class="n">k</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">{&#39;this is an&#39;, &#39;is an example&#39;, &#39;an example of&#39;, &#39;example of a&#39;, &#39;of a document&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.minhash">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">minhash</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">shingles</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_hashes</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">100</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.minhash" title="Link to this definition"></a></dt>
+<dd><p>Generate a MinHash signature for the given set of shingles.</p>
+<p>MinHash is used to estimate the Jaccard similarity between two sets efficiently. This function computes
+a MinHash signature for a given set of shingles by generating <cite>num_hashes</cite> hash functions and returning
+the minimum hash value for each function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>shingles</strong> (<em>set</em>) – A set of k-shingles (strings) representing the document.</p></li>
+<li><p><strong>num_hashes</strong> (<em>int</em>) – The number of hash functions to use in generating the MinHash signature. Default is 100.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><dl class="simple">
+<dt>A MinHash signature represented as a list of <cite>num_hashes</cite> integers, where each entry is the minimum</dt><dd><p>hash value for that hash function over the shingles.</p>
+</dd>
+</dl>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">shingles</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;this is an example&quot;</span><span class="p">,</span> <span class="s2">&quot;example of a document&quot;</span><span class="p">,</span> <span class="s2">&quot;a document example&quot;</span><span class="p">}</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">minhash</span><span class="p">(</span><span class="n">shingles</span><span class="p">,</span> <span class="n">num_hashes</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">[210933193411394158751014314048262142248, 7042737232409725043981610333941128952, 113933543564394106622393219348875832082]</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="utils.UnionFind">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">UnionFind</span></span><a class="headerlink" href="#utils.UnionFind" title="Link to this definition"></a></dt>
+<dd><p>Union-Find (Disjoint Set) data structure with path compression for efficient merging and finding.</p>
+<p>Union-Find (also known as Disjoint Set) is a data structure that efficiently handles merging of sets
+and finding the root or representative element of a set. It uses path compression to flatten the tree structure,
+improving the efficiency of future find operations.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="utils.UnionFind.parent">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#utils.UnionFind.parent" title="Link to this definition"></a></dt>
+<dd><p>A dictionary mapping each element to its parent element. If an element is its own parent,
+it is the root of its set.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.UnionFind.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.UnionFind.find" title="Link to this definition"></a></dt>
+<dd><p>Finds the root of the set containing element <cite>x</cite>, with path compression to improve efficiency.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="utils.UnionFind.union">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.UnionFind.union" title="Link to this definition"></a></dt>
+<dd><p>Merges the sets containing elements <cite>x</cite> and <cite>y</cite>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="id0">
+<span class="sig-name descname"><span class="pre">parent</span></span><a class="headerlink" href="#id0" title="Link to this definition"></a></dt>
+<dd><p>Initializes an empty Union-Find structure.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id1">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id1" title="Link to this definition"></a></dt>
+<dd><p>Find the root of the set containing element <cite>x</cite> with path compression.</p>
+<p>Path compression is used to make future queries faster by setting each element’s parent directly to the root.
+If the element <cite>x</cite> is not yet in the Union-Find structure, it is initialized as its own root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> – The element whose set root is being queried.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The root element of the set containing <cite>x</cite>.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="id2">
+<span class="sig-name descname"><span class="pre">union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#id2" title="Link to this definition"></a></dt>
+<dd><p>Union the sets containing elements <cite>x</cite> and <cite>y</cite>.</p>
+<p>This method merges the sets that contain elements <cite>x</cite> and <cite>y</cite>. If the elements are already in the same set,
+no change is made. Otherwise, one set’s root is updated to point to the other set’s root.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The first element to union.</p></li>
+<li><p><strong>y</strong> – The second element to union.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span> <span class="o">=</span> <span class="n">UnionFind</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span><span class="o">.</span><span class="n">union</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">uf</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+<span class="go">2</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.read_tsv">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">read_tsv</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">tsv</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.read_tsv" title="Link to this definition"></a></dt>
+<dd><p>Read a TSV (tab-separated values) file and return a dictionary of its contents.</p>
+<p>This function reads a TSV file where each line consists of an index and a text value separated by a tab.
+The index is used as the key, and the text as the value in the returned dictionary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tsv</strong> (<em>str</em>) – The file path to the TSV file.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary where keys are the integer indices from the TSV file, and values are the text content.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">read_tsv</span><span class="p">(</span><span class="s1">&#39;documents.tsv&#39;</span><span class="p">)</span>
+<span class="go">{1: &#39;This is the first document.&#39;, 2: &#39;Another document with different content.&#39;}</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.split_dict">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">split_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">input_dict</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_splits</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.split_dict" title="Link to this definition"></a></dt>
+<dd><p>Splits a dictionary into a specified number of smaller dictionaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_dict</strong> (<em>dict</em>) – The input dictionary to be split.</p></li>
+<li><p><strong>num_splits</strong> (<em>int</em>) – The number of splits.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A list of dictionaries with split entries.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="utils.majority_vote">
+<span class="sig-prename descclassname"><span class="pre">utils.</span></span><span class="sig-name descname"><span class="pre">majority_vote</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">candidate_sets</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#utils.majority_vote" title="Link to this definition"></a></dt>
+<dd><p>This function performs a majority vote on a list of sets of candidate pairs.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>candidate_sets</strong> (<em>list</em><em> of </em><em>sets</em>) – List of sets containing candidate pairs.</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The pairs that appear in the majority of sets.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list</p>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="../index.html" class="btn btn-neutral float-left" title="API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="../use_cases/index.html" class="btn btn-neutral float-right" title="use_cases" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, JaeHo Bahng, Brian Kwon,Jiatong Liu, Shriya Chinthak, Agustina Zuckerberg.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

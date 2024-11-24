@@ -1,0 +1,33 @@
+deduplication
+=============
+
+.. py:module:: deduplication
+
+
+Submodules
+----------
+
+.. toctree::
+   :maxdepth: 1
+
+   /autoapi/deduplication/LSH/index
+   /autoapi/deduplication/LSHForest/index
+   /autoapi/deduplication/LSHImproved/index
+   /autoapi/deduplication/__main__/index
+   /autoapi/deduplication/bloom_filter/index
+   /autoapi/deduplication/dedup/index
+
+
+Attributes
+----------
+
+.. autoapisummary::
+
+   deduplication.__version__
+
+
+Package Contents
+----------------
+
+.. py:data:: __version__
+
